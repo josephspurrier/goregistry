@@ -1,5 +1,6 @@
 goregistry
 ==========
+[![Build Status](https://travis-ci.org/josephspurrier/goregistry.svg)](https://travis-ci.org/josephspurrier/goregistry)
 
 Golang Global Registry
 
