@@ -27,25 +27,25 @@ reg.Set("foo", "bar")
 ## Retrieve a value
 
 ```go
-value, err := reg.Get("foo")
+value, ok := reg.Get("foo")
 ```
 
 ## Retrieve a string value
 
 ```go
-value, err := reg.GetString("foo")
+value, ok := reg.GetString("foo")
 ```
 
 ## Retrieve a bool value
 
 ```go
-value, err := reg.GetBool("foo")
+value, ok := reg.GetBool("foo")
 ```
 
-## Retrieve a int value
+## Retrieve an int value
 
 ```go
-value, err := reg.GetInt("foo")
+value, ok := reg.GetInt("foo")
 ```
 
 ## Full example
