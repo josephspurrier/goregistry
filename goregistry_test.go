@@ -1,4 +1,4 @@
-// Copyright (C) Joseph Spurrier. All rights reserved.
+// Copyright 2014 Joseph Spurrier
 // Author: Joseph Spurrier (http://josephspurrier.com)
 // License: http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -7,21 +7,19 @@
 package goregistry
 
 import (
+	"fmt"
 	"testing"
 )
 
 // Setup the registry
 func TestMain(t *testing.T) {
-	reg := Registry()
-	reg.Set("foo", "bar")
+	Set("foo", "bar")
 }
 
 func TestDelete(t *testing.T) {
-	reg := Registry()
+	Delete("foo")
 
-	reg.Delete("foo")
-
-	if _, ok := reg.Get("foo"); ok {
+	if _, ok := Get("foo"); ok {
 		t.Error("Expected:", false, "|", "Actual:", ok)
 	}
 
@@ -30,11 +28,9 @@ func TestDelete(t *testing.T) {
 }
 
 func TestClear(t *testing.T) {
-	reg := Registry()
+	Clear()
 
-	reg.Clear()
-
-	if _, ok := reg.Get("foo"); ok {
+	if _, ok := Get("foo"); ok {
 		t.Error("Expected:", false, "|", "Actual:", ok)
 	}
 
@@ -42,35 +38,41 @@ func TestClear(t *testing.T) {
 	TestMain(t)
 }
 
+func ExampleUse() {
+	Set("test", "bar")
+
+	if v, ok := Get("test"); ok {
+		fmt.Println(v)
+		// Output: bar
+	} else {
+		fmt.Println("Value not found")
+	}
+}
+
 // *****************************************************************************
 // Get
 // *****************************************************************************
 
 func TestGetInterface(t *testing.T) {
-	reg := Registry()
-
-	if v, ok := reg.Get("foo"); !ok || v != "bar" {
+	if v, ok := Get("foo"); !ok || v != "bar" {
 		t.Error("Expected:", "bar", "|", "Actual:", v)
 	}
 }
 
 func TestSetIntGetInterfaceInt(t *testing.T) {
-	reg := Registry()
-	reg.Set("bar", 4)
+	Set("bar", 4)
 
-	if v, ok := reg.Get("bar"); !ok || v != 4 {
+	if v, ok := Get("bar"); !ok || v != 4 {
 		t.Error("Expected:", 4, "|", "Actual:", v)
 	}
 }
 
 func TestGetFunc(t *testing.T) {
-	reg := Registry()
-
-	reg.Set("func", func() string {
+	Set("func", func() string {
 		return "ok"
 	}())
 
-	if v, ok := reg.Get("func"); !ok || v != "ok" {
+	if v, ok := Get("func"); !ok || v != "ok" {
 		t.Error("Expected:", "ok", "|", "Actual:", v)
 	}
 }
@@ -80,45 +82,46 @@ func TestGetFunc(t *testing.T) {
 // *****************************************************************************
 
 func TestSetIntGetString(t *testing.T) {
-	reg := Registry()
-	reg.Set("bar", 4)
+	Set("bar", 4)
 
-	if v, ok := reg.GetString("bar"); !ok || v != "4" {
+	if v, ok := GetString("bar"); !ok || v != "4" {
 		t.Error("Expected:", "4", "|", "Actual:", v)
 	}
 }
 
 func TestSetRuneGetString(t *testing.T) {
-	reg := Registry()
-	reg.Set("bar", 'b')
+	Set("bar", 'b')
 
-	if v, ok := reg.GetString("bar"); !ok || v != "b" {
+	if v, ok := GetString("bar"); !ok || v != "b" {
 		t.Error("Expected:", "b", "|", "Actual:", v)
 	}
 }
 
 func TestGetString(t *testing.T) {
-	reg := Registry()
-
-	if v, ok := reg.GetString("foo"); !ok || v != "bar" {
+	if v, ok := GetString("foo"); !ok || v != "bar" {
 		t.Error("Expected:", "bar", "|", "Actual:", v)
 	}
 }
 
 func TestGetFuncString(t *testing.T) {
-	reg := Registry()
-
-	if v, ok := reg.GetString("func"); !ok || v != "ok" {
+	if v, ok := GetString("func"); !ok || v != "ok" {
 		t.Error("Expected:", "bar", "|", "Actual:", v)
 	}
 }
 
 func TestSetBoolGetString(t *testing.T) {
-	reg := Registry()
-	reg.Set("bool", true)
+	Set("bool", true)
 
-	if v, ok := reg.GetString("bool"); !ok || v != "true" {
+	if v, ok := GetString("bool"); !ok || v != "true" {
 		t.Error("Expected:", true, "|", "Actual:", v)
+	}
+}
+
+func TestSetFloatGetString(t *testing.T) {
+	Set("float", 1.5)
+
+	if v, ok := GetString("float"); !ok || v != "1.5" {
+		t.Error("Expected:", "1.5", "|", "Actual:", v)
 	}
 }
 
@@ -127,55 +130,49 @@ func TestSetBoolGetString(t *testing.T) {
 // *****************************************************************************
 
 func TestSetBoolGetBoolTrue(t *testing.T) {
-	reg := Registry()
-	reg.Set("bool", true)
+	Set("bool", true)
 
-	if v, ok := reg.GetBool("bool"); !ok || v == false {
+	if v, ok := GetBool("bool"); !ok || v == false {
 		t.Error("Expected:", true, "|", "Actual:", v)
 	}
 }
 
 func TestSetIntGetBoolTrue(t *testing.T) {
-	reg := Registry()
-	reg.Set("bool", 1)
+	Set("bool", 1)
 
-	if v, ok := reg.GetBool("bool"); !ok || v == false {
+	if v, ok := GetBool("bool"); !ok || v == false {
 		t.Error("Expected:", true, "|", "Actual:", v)
 	}
 }
 
 func TestSetStringGetBoolTrueT(t *testing.T) {
-	reg := Registry()
-	reg.Set("bool", "T")
+	Set("bool", "T")
 
-	if v, ok := reg.GetBool("bool"); !ok || v == false {
+	if v, ok := GetBool("bool"); !ok || v == false {
 		t.Error("Expected:", true, "|", "Actual:", v)
 	}
 }
 
 func TestSetRuneGetBoolTrueT(t *testing.T) {
-	reg := Registry()
-	reg.Set("bool", 'T')
+	Set("bool", 'T')
 
-	if v, ok := reg.GetBool("bool"); !ok || v == false {
+	if v, ok := GetBool("bool"); !ok || v == false {
 		t.Error("Expected:", true, "|", "Actual:", v)
 	}
 }
 
 func TestSetFloatGetBoolTrue1(t *testing.T) {
-	reg := Registry()
-	reg.Set("bool", 1.0)
+	Set("bool", 1.0)
 
-	if v, ok := reg.GetBool("bool"); !ok || v == false {
+	if v, ok := GetBool("bool"); !ok || v == false {
 		t.Error("Expected:", true, "|", "Actual:", v)
 	}
 }
 
 func TestSetStringGetBoolFalse(t *testing.T) {
-	reg := Registry()
-	reg.Set("bool", false)
+	Set("bool", false)
 
-	if v, ok := reg.GetBool("bool"); !ok || v == true {
+	if v, ok := GetBool("bool"); !ok || v == true {
 		t.Error("Expected:", false, "|", "Actual:", v)
 	}
 }
@@ -185,64 +182,57 @@ func TestSetStringGetBoolFalse(t *testing.T) {
 // *****************************************************************************
 
 func TestSetIntGetInt1(t *testing.T) {
-	reg := Registry()
-	reg.Set("int", 1)
+	Set("int", 1)
 
-	if v, ok := reg.GetInt("int"); !ok || v != 1 {
+	if v, ok := GetInt("int"); !ok || v != 1 {
 		t.Error("Expected:", 1, "|", "Actual:", v)
 	}
 }
 
 func TestSetIntGetInt0(t *testing.T) {
-	reg := Registry()
-	reg.Set("int", 0)
+	Set("int", 0)
 
-	if v, ok := reg.GetInt("int"); !ok || v != 0 {
+	if v, ok := GetInt("int"); !ok || v != 0 {
 		t.Error("Expected:", 0, "|", "Actual:", v)
 	}
 }
 
 func TestSetBoolGetIntT(t *testing.T) {
-	reg := Registry()
-	reg.Set("int", true)
+	Set("int", true)
 
-	if v, ok := reg.GetInt("int"); !ok || v != 1 {
+	if v, ok := GetInt("int"); !ok || v != 1 {
 		t.Error("Expected:", 1, "|", "Actual:", v)
 	}
 }
 
 func TestSetBoolGetIntF(t *testing.T) {
-	reg := Registry()
-	reg.Set("int", false)
+	Set("int", false)
 
-	if v, ok := reg.GetInt("int"); !ok || v != 0 {
+	if v, ok := GetInt("int"); !ok || v != 0 {
 		t.Error("Expected:", 0, "|", "Actual:", v)
 	}
 }
 
 func TestSetStringGetInt(t *testing.T) {
-	reg := Registry()
-	reg.Set("int", "1")
+	Set("int", "1")
 
-	if v, ok := reg.GetInt("int"); !ok || v != 1 {
+	if v, ok := GetInt("int"); !ok || v != 1 {
 		t.Error("Expected:", 1, "|", "Actual:", v)
 	}
 }
 
 func TestSetFloatGetInt(t *testing.T) {
-	reg := Registry()
-	reg.Set("int", 1.4)
+	Set("int", 1.4)
 
-	if v, ok := reg.GetInt("int"); !ok || v != 1 {
+	if v, ok := GetInt("int"); !ok || v != 1 {
 		t.Error("Expected:", 1, "|", "Actual:", v)
 	}
 }
 
 func TestSetRuneGetInt(t *testing.T) {
-	reg := Registry()
-	reg.Set("int", 'T')
+	Set("int", 'T')
 
-	if v, ok := reg.GetInt("int"); !ok || v != 84 {
+	if v, ok := GetInt("int"); !ok || v != 84 {
 		t.Error("Expected:", 84, "|", "Actual:", v)
 	}
 }

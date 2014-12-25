@@ -1,4 +1,4 @@
-// Copyright (C) Joseph Spurrier. All rights reserved.
+// Copyright 2014 Joseph Spurrier
 // Author: Joseph Spurrier (http://josephspurrier.com)
 // License: http://www.apache.org/licenses/LICENSE-2.0.html
 
@@ -7,121 +7,120 @@
 package goregistry
 
 import (
+	"fmt"
 	"math"
 	"strconv"
 )
 
 // Package variable
-var i *registry
+var reg *registry
 
 // Registry uses map
 type registry struct {
-	m map[string]interface{}
+	interfaceMap map[string]interface{}
 }
 
-// Get a singleton instance of the registry type
-func Registry() *registry {
-	if i != nil {
-		return i
-	} else {
-		i = new(registry)
-		i.m = make(map[string]interface{})
-		return i
-	}
+// Initialize the instance
+func init() {
+	reg = new(registry)
+	reg.interfaceMap = make(map[string]interface{})
 }
 
 // Set the value of a map key
-func (r *registry) Set(key string, value interface{}) {
-	r.m[key] = value
+func Set(key string, value interface{}) {
+	reg.interfaceMap[key] = value
 }
 
 // Get the value of a map key
-func (r *registry) Get(key string) (interface{}, bool) {
-	s, b := r.m[key]
+func Get(key string) (interface{}, bool) {
+	s, b := reg.interfaceMap[key]
 	return s, b
 }
 
 // Delete the value of a map key
-func (r *registry) Delete(key string) {
-	delete(r.m, key)
+func Delete(key string) {
+	delete(reg.interfaceMap, key)
 }
 
 // Clear all the values
-func (r *registry) Clear() {
-	r.m = make(map[string]interface{})
+func Clear() {
+	reg.interfaceMap = make(map[string]interface{})
 }
 
 // Get the string value of a map key
-func (r *registry) GetString(key string) (string, bool) {
-	s, b := r.m[key]
+func GetString(key string) (string, bool) {
+	s, b := reg.interfaceMap[key]
+
+	if !b {
+		return "", b
+	}
 
 	// Compare the type
-	switch s.(type) {
-	case int:
-		return strconv.Itoa(s.(int)), b
-	case string:
-		return s.(string), b
-	case float64:
-		return strconv.FormatFloat(s.(float64), 'f', -1, 64), b
-	case bool:
-		return strconv.FormatBool(s.(bool)), b
+	switch v := s.(type) {
 	case rune:
-		return string(s.(rune)), b
-	default:
-		return s.(string), b
+		return string(v), b
 	}
+
+	return fmt.Sprintf("%v", s), b
 }
 
 // Get the bool value of a map key
-func (r *registry) GetBool(key string) (bool, bool) {
-	s, b := r.m[key]
+func GetBool(key string) (bool, bool) {
+	s, b := reg.interfaceMap[key]
+
+	if !b {
+		return false, b
+	}
 
 	// Compare the type
-	switch s.(type) {
+	switch v := s.(type) {
 	case int:
-		a, _ := strconv.ParseBool(strconv.Itoa(s.(int)))
+		a, _ := strconv.ParseBool(strconv.Itoa(v))
 		return a, b
 	case string:
-		a, _ := strconv.ParseBool(s.(string))
+		a, _ := strconv.ParseBool(v)
 		return a, b
 	case float64:
-		a, _ := strconv.ParseBool(strconv.FormatFloat(s.(float64), 'f', -1, 64))
+		a, _ := strconv.ParseBool(strconv.FormatFloat(v, 'f', -1, 64))
 		return a, b
 	case bool:
-		return s.(bool), b
+		return v, b
 	case rune:
-		a, _ := strconv.ParseBool(string(s.(rune)))
+		a, _ := strconv.ParseBool(string(v))
 		return a, b
-	default:
-		return s.(bool), b
 	}
+
+	return false, b
 }
 
-// Get the bool value of a map key
-func (r *registry) GetInt(key string) (int, bool) {
-	s, b := r.m[key]
+// Get the int value of a map key
+func GetInt(key string) (int, bool) {
+	s, b := reg.interfaceMap[key]
+
+	if !b {
+		return 0, b
+	}
 
 	// Compare the type
-	switch s.(type) {
+	switch v := s.(type) {
 	case int:
-		return s.(int), b
+		return v, b
 	case string:
-		a, _ := strconv.ParseInt(s.(string), 10, 0)
+		a, _ := strconv.ParseInt(v, 10, 0)
 		return int(a), b
 	case float64:
-		a, _ := strconv.ParseInt(strconv.FormatFloat(round(s.(float64), .5, 0), 'f', -1, 64), 10, 0)
+		a, _ := strconv.ParseInt(strconv.FormatFloat(round(v, .5, 0), 'f', -1, 64), 10, 0)
 		return int(a), b
 	case bool:
-		if s.(bool) {
+		if v {
 			return 1, b
-		} else {
-			return 0, b
 		}
+		return 0, b
 	case rune:
-		return int(s.(rune)), b
-	default:
-		return s.(int), b
+		return int(v), b
 	}
+
+	return 0, b
 }
 
 // Source: https://gist.github.com/pelegm/c48cff315cd223f7cf7b

@@ -1,10 +1,9 @@
 goregistry
 ==========
-[![Build Status](https://travis-ci.org/josephspurrier/goregistry.svg)](https://travis-ci.org/josephspurrier/goregistry)
 
 Golang Global Registry
 
-Implements the singleton pattern so the same instance can be used anywhere.
+Generic container with type conversion.
 
 ## Add the import
 
@@ -12,77 +11,51 @@ Implements the singleton pattern so the same instance can be used anywhere.
 import "github.com/josephspurrier/goregistry"
 ```
 
-## Create an instance
-
-```go
-reg := goregistry.Registry()
-```
-
 ## Store a value
 
 ```go
-reg.Set("foo", "bar")
+goregistry.Set("foo", "bar")
 ```
 
 ## Retrieve a value
 
 ```go
-value, ok := reg.Get("foo")
+value, err := goregistry.Get("foo")
 ```
 
 ## Retrieve a string value
 
 ```go
-value, ok := reg.GetString("foo")
+value, err := goregistry.GetString("foo")
 ```
 
 ## Retrieve a bool value
 
 ```go
-value, ok := reg.GetBool("foo")
+value, err := goregistry.GetBool("foo")
 ```
 
-## Retrieve an int value
+## Retrieve a int value
 
 ```go
-value, ok := reg.GetInt("foo")
-```
-
-## Delete a value
-
-```go
-reg.Delete("foo")
-```
-
-## Clear all values
-
-```go
-reg.Clear()
+value, err := goregistry.GetInt("foo")
 ```
 
 ## Full example
 
 ```go
-package main
-
 import (
-	"fmt"
 	"github.com/josephspurrier/goregistry"
+	"fmt"
 )
 
-func test() {
-	reg := goregistry.Registry()
-	if v, ok := reg.Get("foo"); ok {
-		fmt.Println(v)
+func main {
+	goregistry.Set("foo", "bar")
+
+	if v, ok := goregistry.Get("foo"); ok {
+		fmt.Println(v);
 	} else {
-		fmt.Println("Value not found")
+		fmt.Println("Value not found");
 	}
-}
-
-func main() {
-	reg := goregistry.Registry()
-	reg.Set("foo", "bar")
-
-	test()
 }
 ```
