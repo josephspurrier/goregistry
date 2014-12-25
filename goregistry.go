@@ -41,6 +41,16 @@ func (r *registry) Get(key string) (interface{}, bool) {
 	return s, b
 }
 
+// Delete the value of a map key
+func (r *registry) Delete(key string) {
+	delete(r.m, key)
+}
+
+// Clear all the values
+func (r *registry) Clear() {
+	r.m = make(map[string]interface{})
+}
+
 // Get the string value of a map key
 func (r *registry) GetString(key string) (string, bool) {
 	s, b := r.m[key]

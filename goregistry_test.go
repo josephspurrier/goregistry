@@ -14,10 +14,32 @@ import (
 func TestMain(t *testing.T) {
 	reg := Registry()
 	reg.Set("foo", "bar")
+}
 
-	reg.Set("func", func() string {
-		return "ok"
-	}())
+func TestDelete(t *testing.T) {
+	reg := Registry()
+
+	reg.Delete("foo")
+
+	if _, ok := reg.Get("foo"); ok {
+		t.Error("Expected:", false, "|", "Actual:", ok)
+	}
+
+	// Reset
+	TestMain(t)
+}
+
+func TestClear(t *testing.T) {
+	reg := Registry()
+
+	reg.Clear()
+
+	if _, ok := reg.Get("foo"); ok {
+		t.Error("Expected:", false, "|", "Actual:", ok)
+	}
+
+	// Reset
+	TestMain(t)
 }
 
 // *****************************************************************************
@@ -43,6 +65,10 @@ func TestSetIntGetInterfaceInt(t *testing.T) {
 
 func TestGetFunc(t *testing.T) {
 	reg := Registry()
+
+	reg.Set("func", func() string {
+		return "ok"
+	}())
 
 	if v, ok := reg.Get("func"); !ok || v != "ok" {
 		t.Error("Expected:", "ok", "|", "Actual:", v)

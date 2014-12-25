@@ -48,6 +48,18 @@ value, ok := reg.GetBool("foo")
 value, ok := reg.GetInt("foo")
 ```
 
+## Delete a value
+
+```go
+reg.Delete("foo")
+```
+
+## Clear all values
+
+```go
+reg.Clear()
+```
+
 ## Full example
 
 ```go
