@@ -1,0 +1,4 @@
+goregistry
+==========
+
+Golang Global Registry
