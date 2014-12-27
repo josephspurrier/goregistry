@@ -4,7 +4,7 @@ goregistry
 
 Golang Global Registry
 
-Generic container with type conversion.
+Threa-safe, generic container with type conversion. 100% test coverage.
 
 ## Add the import
 
@@ -45,6 +45,8 @@ value, err := goregistry.GetInt("foo")
 ## Full example
 
 ```go
+package main
+
 import (
 	"github.com/josephspurrier/goregistry"
 	"fmt"

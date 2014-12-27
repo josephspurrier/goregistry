@@ -2,14 +2,14 @@
 // Author: Joseph Spurrier (http://josephspurrier.com)
 // License: http://www.apache.org/licenses/LICENSE-2.0.html
 
-// Global registry that uses the singleton pattern
-
+// Generic container to use as a global registry with type conversion.
 package goregistry
 
 import (
 	"fmt"
 	"math"
 	"strconv"
+	"sync"
 )
 
 // Package variable
@@ -17,6 +17,7 @@ var reg *registry
 
 // Registry uses map
 type registry struct {
+	sync.RWMutex
 	interfaceMap map[string]interface{}
 }
 
@@ -28,28 +29,38 @@ func init() {
 
 // Set the value of a map key
 func Set(key string, value interface{}) {
+	reg.Lock()
 	reg.interfaceMap[key] = value
+	reg.Unlock()
 }
 
 // Get the value of a map key
 func Get(key string) (interface{}, bool) {
+	reg.RLock()
 	s, b := reg.interfaceMap[key]
+	reg.RUnlock()
 	return s, b
 }
 
 // Delete the value of a map key
 func Delete(key string) {
+	reg.Lock()
 	delete(reg.interfaceMap, key)
+	reg.Unlock()
 }
 
 // Clear all the values
 func Clear() {
+	reg.Lock()
 	reg.interfaceMap = make(map[string]interface{})
+	reg.Unlock()
 }
 
 // Get the string value of a map key
 func GetString(key string) (string, bool) {
+	reg.RLock()
 	s, b := reg.interfaceMap[key]
+	reg.RUnlock()
 
 	if !b {
 		return "", b
@@ -66,7 +77,9 @@ func GetString(key string) (string, bool) {
 
 // Get the bool value of a map key
 func GetBool(key string) (bool, bool) {
+	reg.RLock()
 	s, b := reg.interfaceMap[key]
+	reg.RUnlock()
 
 	if !b {
 		return false, b
@@ -95,7 +108,9 @@ func GetBool(key string) (bool, bool) {
 
 // Get the int value of a map key
 func GetInt(key string) (int, bool) {
+	reg.RLock()
 	s, b := reg.interfaceMap[key]
+	reg.RUnlock()
 
 	if !b {
 		return 0, b
