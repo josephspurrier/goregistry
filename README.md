@@ -4,4 +4,4 @@ goregistry
 
 Golang Global Registry
 
-Thread-safe, generic container with type conversion. View the documentation on GoDoc.
+Thread-safe, generic container with type conversion. Complete documentation available on [GoDoc](https://godoc.org/github.com/josephspurrier/goregistry).
