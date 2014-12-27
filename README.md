@@ -1,6 +1,6 @@
 goregistry
 ==========
-[![Build Status](https://travis-ci.org/josephspurrier/goregistry.svg)](https://travis-ci.org/josephspurrier/goregistry)
+[![Build Status](https://travis-ci.org/josephspurrier/goregistry.svg)](https://travis-ci.org/josephspurrier/goregistry) [![Coverage Status](https://coveralls.io/repos/josephspurrier/goregistry/badge.png)](https://coveralls.io/r/josephspurrier/goregistry)
 
 Golang Global Registry
 
