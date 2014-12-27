@@ -2,7 +2,7 @@
 // Author: Joseph Spurrier (http://josephspurrier.com)
 // License: http://www.apache.org/licenses/LICENSE-2.0.html
 
-// Generic container to use as a global registry with type conversion.
+// Package goregistry is generic container which can be used as a global registry with type conversion.
 package goregistry
 
 import (
@@ -56,7 +56,7 @@ func Clear() {
 	reg.Unlock()
 }
 
-// Get the string value of a map key
+// GetString will retrieve the string value of a map key
 func GetString(key string) (string, bool) {
 	reg.RLock()
 	s, b := reg.interfaceMap[key]
@@ -75,7 +75,7 @@ func GetString(key string) (string, bool) {
 	return fmt.Sprintf("%v", s), b
 }
 
-// Get the bool value of a map key
+// GetBool will retrieve the bool value a map key
 func GetBool(key string) (bool, bool) {
 	reg.RLock()
 	s, b := reg.interfaceMap[key]
@@ -106,7 +106,7 @@ func GetBool(key string) (bool, bool) {
 	return false, b
 }
 
-// Get the int value of a map key
+// GetInt will retrieve the int value of a map key
 func GetInt(key string) (int, bool) {
 	reg.RLock()
 	s, b := reg.interfaceMap[key]
